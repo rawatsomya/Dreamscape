@@ -74,10 +74,13 @@
 </head>
 <body>
   <canvas id="game"></canvas>
+  <div id="stars"></div>
   <div id="prompt-overlay">
     <input id="story-prompt" type="text" placeholder="Type your story idea..." maxlength="120" />
     <button id="start-btn">GO</button>
+    <div id="status" style="color: #bbb; font: 13px monospace; margin-left: 8px;"></div>
   </div>
+  <pre id="json-out" style="position: absolute; bottom: 20px; left: 20px; right: 20px; max-height: 200px; overflow: auto; background: rgba(0,0,0,0.8); color: #00ffcc; font: 12px monospace; padding: 12px; border-radius: 6px; border: 1px solid #333; z-index: 10; pointer-events: auto; display: none;"></pre>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

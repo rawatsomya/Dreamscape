@@ -1,55 +1,48 @@
-import { MenuScreen } from './MenuScreen.js';
+import { createStory } from './api.js';
 
-const canvas = document.getElementById('game');
-const promptOverlay = document.getElementById('prompt-overlay');
-const storyPrompt = document.getElementById('story-prompt');
-const startBtn = document.getElementById('start-btn');
+const input = document.getElementById('story-prompt');
+const btn = document.getElementById('start-btn');
+const out = document.getElementById('json-out');
+const status = document.getElementById('status');
+const stars = document.getElementById('stars');
 
-// Fixed virtual resolution
-const WIDTH = 1280;
-const HEIGHT = 720;
-canvas.width = WIDTH;
-canvas.height = HEIGHT;
-
-const menu = new MenuScreen(canvas);
-
-// Positioning overlay right beneath the header text
-function repositionOverlay() {
-  const rect = canvas.getBoundingClientRect();
-  const scale = rect.width / WIDTH;
-
-  // Center horizontally, position around centerY + 40
-  const overlayY = rect.top + (HEIGHT / 2 + 40) * scale;
-  const overlayX = rect.left + rect.width / 2;
-
-  promptOverlay.style.left = `${overlayX}px`;
-  promptOverlay.style.top = `${overlayY}px`;
-  promptOverlay.style.transform = `translate(-50%, -50%) scale(${Math.min(1, Math.max(0.65, scale))})`;
-  promptOverlay.style.transformOrigin = 'center center';
-}
-
-window.addEventListener('resize', repositionOverlay);
-new ResizeObserver(repositionOverlay).observe(canvas);
-requestAnimationFrame(repositionOverlay);
-
-// Handle GO button
-function submitStory() {
-  const story = storyPrompt.value.trim();
-  console.log('[Dreamscape] User submitted story prompt:', story);
-}
-
-startBtn.addEventListener('click', submitStory);
-storyPrompt.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    submitStory();
+// tiny starfield decoration
+if (stars) {
+  for (let i = 0; i < 50; i++) {
+    const s = document.createElement('span');
+    s.style.left = `${Math.random() * 100}%`;
+    s.style.top = `${Math.random() * 100}%`;
+    s.style.opacity = String(0.25 + Math.random() * 0.6);
+    stars.appendChild(s);
   }
-});
-
-// Render Loop
-function loop() {
-  menu.update();
-  menu.draw();
-  requestAnimationFrame(loop);
 }
 
-requestAnimationFrame(loop);
+async function onGo() {
+  const prompt = input.value.trim();
+  if (!prompt) {
+    if (status) status.textContent = 'Type a story idea first.';
+    return;
+  }
+
+  btn.disabled = true;
+  if (status) status.textContent = 'Calling Gemini…';
+  if (out) out.textContent = 'Generating…';
+
+  try {
+    const data = await createStory(prompt);
+    if (out) out.textContent = JSON.stringify(data, null, 2);
+    if (status) status.textContent = `OK — ${data.theme?.title || 'world'} ready (JSON only for now)`;
+    console.log('Dreamscape JSON', data);
+  } catch (err) {
+    console.error(err);
+    if (status) status.textContent = 'Failed';
+    if (out) out.textContent = String(err.message || err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+btn.addEventListener('click', onGo);
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') onGo();
+});
