@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playable Storybook</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden; background: #111;
+      display: flex; align-items: center; justify-content: center;
+    }
+    canvas {
+      display: block;
+      image-rendering: pixelated;
+      max-width: 100vw;
+      max-height: 100vh;
+      aspect-ratio: 16 / 9;
+    }
+    #prompt-overlay {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+      z-index: 10;
+    }
+    #prompt-overlay.hidden { display: none; }
+    #story-prompt {
+      width: 340px;
+      height: 40px;
+      padding: 0 14px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font: 15px monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #story-prompt:focus {
+      border-color: rgba(241, 196, 15, 0.7);
+      background: rgba(255, 255, 255, 0.14);
+    }
+    #story-prompt::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+    #start-btn {
+      height: 40px;
+      padding: 0 18px;
+      background: #6366f1;
+      border: 3px solid #a78bfa;
+      border-radius: 2px;
+      color: #fff;
+      font: bold 14px monospace;
+      cursor: pointer;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 3px 3px 0 #312e81, inset 0 -3px 0 rgba(0,0,0,0.25);
+      image-rendering: pixelated;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    #start-btn:hover {
+      background: #818cf8;
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 #312e81, inset 0 -3px 0 rgba(0,0,0,0.25);
+    }
+    #start-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #312e81, inset 0 -1px 0 rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="prompt-overlay">
+    <input id="story-prompt" type="text" placeholder="Type your story idea..." maxlength="120" />
+    <button id="start-btn">GO</button>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
