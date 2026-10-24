@@ -1,178 +1,112 @@
 {
   "theme": {
-    "title": "Sugar Rush Nebula",
-    "premise": "A whimsical candy planet where ferocious gummy bears roam sugary hills, boiling chocolate rivers carve through the valleys, and steaming espresso geysers provide lightning-fast boosts.",
-    "art_style": "Vibrant pastel 16-bit pixel art with candy-cane striping, neon gummy translucency, and rich chocolate gloss",
+    "title": "Desert Dunes",
+    "premise": "A yellow electric mouse races across quiet dunes, dodging scorpions, cactus pests, and dusty mummies to find the bronze key.",
+    "art_style": "Soft desert dusk, muted pastels, clean 2d game sprites",
     "assets": {
-      "character": "sprites/hero.png",
-      "enemy_1": "sprites/enemy.png",
-      "platform": "sprites/platform.png",
-      "npc": "sprites/npc.png"
+      "character": "sprites_clean/hero.png",
+      "enemy_1": "sprites_clean/enemy_1.png",
+      "enemy_2": "sprites_clean/enemy_2.png",
+      "enemy_3": "sprites_clean/enemy_3.png",
+      "platform": "sprites_clean/platform.png",
+      "npc": "sprites_clean/npc.png",
+      "ground": "tiles/ground.png",
+      "background": "backgrounds/ch00_bg.png"
     }
   },
   "level": {
     "level_id": "level_000",
-    "chapter": "The Gumdrop Foothills",
+    "chapter": "Sunbaked Trail",
     "chapter_number": 1,
-    "narration": "Tread lightly on the frosted crust; the gummy prowlers are hungry, and the chocolate rapids below are scalding hot.",
+    "narration": "Cross the dunes, talk to the fox guide, grab the key, reach the exit.",
     "background": "backgrounds/ch00_bg.png",
-    "world": {
-      "width": 3200,
-      "height": 1080
-    },
+    "world": { "width": 2800, "height": 900 },
     "platforms": [
-      {
-        "x": 0,
-        "y": 850,
-        "w": 3200,
-        "h": 230,
-        "role": "ground"
-      },
-      {
-        "x": 420,
-        "y": 700,
-        "w": 192,
-        "h": 48,
-        "role": "platform"
-      },
-      {
-        "x": 780,
-        "y": 580,
-        "w": 220,
-        "h": 48,
-        "role": "platform"
-      },
-      {
-        "x": 1250,
-        "y": 660,
-        "w": 180,
-        "h": 48,
-        "role": "platform"
-      },
-      {
-        "x": 1700,
-        "y": 540,
-        "w": 240,
-        "h": 48,
-        "role": "platform"
-      },
-      {
-        "x": 2200,
-        "y": 680,
-        "w": 200,
-        "h": 48,
-        "role": "platform"
-      },
-      {
-        "x": 2600,
-        "y": 560,
-        "w": 220,
-        "h": 48,
-        "role": "platform"
-      }
+      { "x": 0, "y": 780, "w": 1100, "h": 120, "role": "ground" },
+      { "x": 1550, "y": 780, "w": 1250, "h": 120, "role": "ground" },
+      { "x": 280, "y": 680, "w": 180, "h": 48, "role": "platform" },
+      { "x": 500, "y": 600, "w": 180, "h": 48, "role": "platform" },
+      { "x": 720, "y": 680, "w": 180, "h": 48, "role": "platform" },
+      { "x": 1120, "y": 700, "w": 160, "h": 48, "role": "platform" },
+      { "x": 1300, "y": 640, "w": 160, "h": 48, "role": "platform" },
+      { "x": 1480, "y": 700, "w": 160, "h": 48, "role": "platform" },
+      { "x": 1900, "y": 680, "w": 200, "h": 48, "role": "platform" },
+      { "x": 2200, "y": 600, "w": 200, "h": 48, "role": "platform" }
     ],
     "pickups": [
-      {
-        "role": "coin",
-        "x": 460,
-        "y": 650
-      },
-      {
-        "role": "coin",
-        "x": 820,
-        "y": 530
-      },
-      {
-        "role": "health",
-        "x": 1300,
-        "y": 610
-      },
-      {
-        "role": "key",
-        "x": 1780,
-        "y": 490
-      },
-      {
-        "role": "coin",
-        "x": 2250,
-        "y": 630
-      }
+      { "role": "coin", "x": 320, "y": 640 },
+      { "role": "coin", "x": 540, "y": 560 },
+      { "role": "coin", "x": 760, "y": 640 },
+      { "role": "health", "x": 1520, "y": 660 },
+      { "role": "key", "x": 1345, "y": 600 },
+      { "role": "coin", "x": 1960, "y": 640 },
+      { "role": "coin", "x": 2260, "y": 560 }
     ],
     "enemies": [
       {
         "role": "enemy_1",
-        "x": 1000,
-        "y": 806,
-        "patrol": [
-          850,
-          1150
-        ],
-        "behavior": "chase",
-        "detect_range": 350,
-        "chase_speed": 220
+        "x": 650,
+        "y": 732,
+        "w": 52,
+        "h": 44,
+        "patrol": [560, 900],
+        "behavior": "patrol"
       },
       {
-        "role": "enemy_1",
-        "x": 2050,
-        "y": 806,
-        "patrol": [
-          1900,
-          2200
-        ],
-        "behavior": "chase",
-        "detect_range": 400,
-        "chase_speed": 240
+        "role": "enemy_2",
+        "x": 1800,
+        "y": 732,
+        "w": 48,
+        "h": 48,
+        "patrol": [1650, 2000],
+        "behavior": "patrol"
+      },
+      {
+        "role": "enemy_3",
+        "x": 2100,
+        "y": 732,
+        "w": 48,
+        "h": 52,
+        "patrol": [2050, 2450],
+        "behavior": "patrol"
       }
     ],
     "blocks": [],
     "hazards": [
-      {
-        "type": "lava",
-        "x": 1400,
-        "y": 830,
-        "w": 300,
-        "h": 50
-      }
+      { "type": "lava", "x": 1100, "y": 820, "w": 450, "h": 80 }
     ],
     "bounce_pads": [],
     "teleporters": [],
     "npcs": [
       {
         "role": "npc",
-        "name": "Barista Bonbon",
-        "x": 220,
-        "y": 786,
+        "name": "Oasis Fox",
+        "x": 160,
+        "y": 716,
+        "w": 48,
+        "h": 64,
         "dialogue": [
-          {
-            "speaker": "Barista Bonbon",
-            "text": "Drink up that espresso essence to outrun the gummy beasts!"
-          },
-          {
-            "speaker": "Barista Bonbon",
-            "text": "Mind the molten chocolate flow ahead, and retrieve the sugar key to escape."
-          }
+          { "speaker": "Oasis Fox", "text": "Hot dunes ahead — jump the stone islands over the sand pit!" },
+          { "speaker": "Oasis Fox", "text": "Grab the bronze key, then the exit opens on the far side." }
         ]
       }
     ],
     "exit": {
       "role": "exit_door",
-      "x": 3000,
-      "y": 658,
-      "w": 128,
+      "x": 2550,
+      "y": 588,
+      "w": 96,
       "h": 192,
       "unlock_condition": "has_key",
-      "locked_dialogue": "Find the sugar key to unseal the candy vault.",
+      "locked_dialogue": "Find the bronze key first.",
       "target_level": "level_001"
     },
-    "player_spawn": {
-      "x": 60,
-      "y": 780
-    },
+    "player_spawn": { "x": 60, "y": 728 },
     "physics": {
-      "gravity": 1200,
-      "jump_force": -520,
-      "move_speed": 420,
-      "max_fall_speed": 600,
+      "gravity": 1600,
+      "jump_force": -720,
+      "move_speed": 320,
+      "max_fall_speed": 900,
       "friction": 800,
       "coyote_time_ms": 80,
       "jump_buffer_ms": 100

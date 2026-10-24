@@ -34,10 +34,10 @@ SUGAR_RUSH_MOCK = {
         "premise": "A whimsical candy planet where ferocious gummy bears roam sugary hills, boiling chocolate rivers carve through the valleys, and steaming espresso geysers provide lightning-fast boosts.",
         "art_style": "Vibrant pastel 16-bit pixel art with candy-cane striping, neon gummy translucency, and rich chocolate gloss",
         "assets": {
-            "character": "sprites/hero.png",
-            "enemy_1": "sprites/enemy.png",
-            "platform": "sprites/platform.png",
-            "npc": "sprites/npc.png"
+            "character": "sprites_clean/hero.png",
+            "enemy_1": "sprites_clean/enemy.png",
+            "platform": "sprites_clean/platform.png",
+            "npc": "sprites_clean/npc.png"
         }
     },
     "level": {

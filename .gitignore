@@ -2,6 +2,8 @@
 node_modules/
 __pycache__/
 *.pyc
+.venv/
+venv/
 
 # Environment & Secrets
 .env
@@ -10,6 +12,7 @@ __pycache__/
 
 # Sessions & Generated run assets
 sessions/
+frontend/public/mock/sprites_raw/
 
 # Build artifacts & logs
 dist/

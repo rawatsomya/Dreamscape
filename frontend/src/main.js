@@ -1,4 +1,5 @@
 import { MenuScreen } from './MenuScreen.js';
+import { Game } from './game/Game.js';
 
 const canvas = document.getElementById('game');
 const input = document.getElementById('story-prompt');
@@ -6,42 +7,58 @@ const btn = document.getElementById('start-btn');
 const out = document.getElementById('json-out');
 const status = document.getElementById('status');
 const promptOverlay = document.getElementById('prompt-overlay');
+const preview = document.getElementById('mock-assets-preview');
 
-// Virtual Resolution
 const WIDTH = 1280;
 const HEIGHT = 720;
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
 const menu = new MenuScreen(canvas);
+const game = new Game(canvas);
 
-// Positioning overlay over the canvas
+let mode = 'menu'; // menu | playing
+
+/** Keep internal 1280×720; CSS stretches canvas to full window. */
+function fitCanvasToWindow() {
+  canvas.style.width = '100vw';
+  canvas.style.height = '100vh';
+}
+
 function repositionOverlay() {
-  const rect = canvas.getBoundingClientRect();
-  const scale = rect.width / WIDTH;
-
-  const overlayY = rect.top + (HEIGHT / 2 + 40) * scale;
-  const overlayX = rect.left + rect.width / 2;
-
-  promptOverlay.style.left = `${overlayX}px`;
-  promptOverlay.style.top = `${overlayY}px`;
-  promptOverlay.style.transform = `translate(-50%, -50%) scale(${Math.min(1, Math.max(0.65, scale))})`;
+  if (mode !== 'menu') return;
+  // Center overlay on the full viewport (game fills the screen)
+  promptOverlay.style.left = '50%';
+  promptOverlay.style.top = '52%';
+  promptOverlay.style.transform = 'translate(-50%, -50%)';
   promptOverlay.style.transformOrigin = 'center center';
 }
 
-window.addEventListener('resize', repositionOverlay);
-new ResizeObserver(repositionOverlay).observe(canvas);
-requestAnimationFrame(repositionOverlay);
+function onResize() {
+  fitCanvasToWindow();
+  repositionOverlay();
+  if (typeof menu.resize === 'function') menu.resize(WIDTH, HEIGHT);
+}
 
-// Menu render loop
-function loop() {
+window.addEventListener('resize', onResize);
+onResize();
+
+function menuLoop() {
+  if (mode !== 'menu') return;
   menu.update();
   menu.draw();
-  requestAnimationFrame(loop);
+  requestAnimationFrame(menuLoop);
 }
-requestAnimationFrame(loop);
+requestAnimationFrame(menuLoop);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function hideMenuChrome() {
+  promptOverlay.classList.add('hidden');
+  if (out) out.style.display = 'none';
+  if (preview) preview.style.display = 'none';
+  if (status) status.textContent = '';
+}
 
 async function onGo() {
   const prompt = input.value.trim();
@@ -51,32 +68,35 @@ async function onGo() {
   }
 
   btn.disabled = true;
-  if (status) status.textContent = 'Generating world (Mock Mode)…';
-  if (out) {
-    out.style.display = 'block';
-    out.textContent = 'Generating…';
-  }
+  if (status) status.textContent = 'Loading mock world…';
 
   try {
-    // mock
-    await sleep(800);
-    const data = await fetch('/mock/sugar-rush.json').then((r) => r.json());
+    await sleep(400);
+    const data = await fetch('/mock/desert-dunes.json').then((r) => {
+      if (!r.ok) throw new Error('Failed to load desert-dunes.json');
+      return r.json();
+    });
 
-    // show data in #json-out
     if (out) {
       out.style.display = 'block';
       out.textContent = JSON.stringify(data, null, 2);
     }
-    const previewContainer = document.getElementById('mock-assets-preview');
-    if (previewContainer) {
-      previewContainer.style.display = 'flex';
-    }
-    if (status) status.textContent = `OK — ${data.theme?.title || 'world'} ready (Mock)`;
-    console.log('Dreamscape JSON (Mock):', data);
+    if (preview) preview.style.display = 'flex';
+    if (status) status.textContent = `Starting ${data.theme?.title || 'mock'}…`;
+
+    mode = 'playing';
+    hideMenuChrome();
+    await game.start(data);
   } catch (err) {
     console.error(err);
-    if (status) status.textContent = 'Failed to load mock JSON';
-    if (out) out.textContent = String(err.message || err);
+    mode = 'menu';
+    promptOverlay.classList.remove('hidden');
+    if (status) status.textContent = 'Failed to start mock';
+    if (out) {
+      out.style.display = 'block';
+      out.textContent = String(err.message || err);
+    }
+    requestAnimationFrame(menuLoop);
   } finally {
     btn.disabled = false;
   }
@@ -84,5 +104,6 @@ async function onGo() {
 
 btn.addEventListener('click', onGo);
 input.addEventListener('keydown', (e) => {
+  e.stopPropagation();
   if (e.key === 'Enter') onGo();
 });

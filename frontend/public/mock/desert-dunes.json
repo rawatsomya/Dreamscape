@@ -1,0 +1,121 @@
+{
+  "theme": {
+    "title": "Desert Dunes",
+    "premise": "A yellow electric mouse races across quiet dunes, dodging scorpions, cactus pests, and dusty mummies to find the bronze key.",
+    "art_style": "Soft desert dusk, muted pastels, clean 2d game sprites",
+    "assets": {
+      "character": "sprites_clean/hero.png",
+      "enemy_1": "sprites_clean/enemy_1.png",
+      "enemy_2": "sprites_clean/enemy_2.png",
+      "enemy_3": "sprites_clean/enemy_3.png",
+      "platform": "sprites_clean/platform.png",
+      "npc": "sprites_clean/npc.png",
+      "ground": "tiles/ground.png",
+      "background": "backgrounds/ch00_bg.png"
+    }
+  },
+  "level": {
+    "level_id": "level_000",
+    "chapter": "Sunbaked Trail",
+    "chapter_number": 1,
+    "narration": "Cross the dunes, talk to the fox guide, grab the key, reach the exit.",
+    "background": "backgrounds/ch00_bg.png",
+    "world": { "width": 2800, "height": 900 },
+    "platforms": [
+      { "x": 0, "y": 780, "w": 1100, "h": 120, "role": "ground" },
+      { "x": 1550, "y": 780, "w": 1250, "h": 120, "role": "ground" },
+      { "x": 280, "y": 680, "w": 180, "h": 48, "role": "platform" },
+      { "x": 500, "y": 600, "w": 180, "h": 48, "role": "platform" },
+      { "x": 720, "y": 680, "w": 180, "h": 48, "role": "platform" },
+      { "x": 1120, "y": 700, "w": 160, "h": 48, "role": "platform" },
+      { "x": 1300, "y": 640, "w": 160, "h": 48, "role": "platform" },
+      { "x": 1480, "y": 700, "w": 160, "h": 48, "role": "platform" },
+      { "x": 1900, "y": 680, "w": 200, "h": 48, "role": "platform" },
+      { "x": 2200, "y": 600, "w": 200, "h": 48, "role": "platform" }
+    ],
+    "pickups": [
+      { "role": "coin", "x": 320, "y": 640 },
+      { "role": "coin", "x": 540, "y": 560 },
+      { "role": "coin", "x": 760, "y": 640 },
+      { "role": "health", "x": 1520, "y": 660 },
+      { "role": "key", "x": 1345, "y": 600 },
+      { "role": "coin", "x": 1960, "y": 640 },
+      { "role": "coin", "x": 2260, "y": 560 }
+    ],
+    "enemies": [
+      {
+        "role": "enemy_1",
+        "x": 650,
+        "y": 732,
+        "w": 52,
+        "h": 44,
+        "patrol": [560, 900],
+        "behavior": "patrol"
+      },
+      {
+        "role": "enemy_2",
+        "x": 1800,
+        "y": 732,
+        "w": 48,
+        "h": 48,
+        "patrol": [1650, 2000],
+        "behavior": "patrol"
+      },
+      {
+        "role": "enemy_3",
+        "x": 2100,
+        "y": 732,
+        "w": 48,
+        "h": 52,
+        "patrol": [2050, 2450],
+        "behavior": "patrol"
+      }
+    ],
+    "blocks": [],
+    "hazards": [
+      { "type": "lava", "x": 1100, "y": 820, "w": 450, "h": 80 }
+    ],
+    "bounce_pads": [],
+    "teleporters": [],
+    "npcs": [
+      {
+        "role": "npc",
+        "name": "Oasis Fox",
+        "x": 160,
+        "y": 716,
+        "w": 48,
+        "h": 64,
+        "dialogue": [
+          { "speaker": "Oasis Fox", "text": "Hot dunes ahead — jump the stone islands over the sand pit!" },
+          { "speaker": "Oasis Fox", "text": "Grab the bronze key, then the exit opens on the far side." }
+        ]
+      }
+    ],
+    "exit": {
+      "role": "exit_door",
+      "x": 2550,
+      "y": 588,
+      "w": 96,
+      "h": 192,
+      "unlock_condition": "has_key",
+      "locked_dialogue": "Find the bronze key first.",
+      "target_level": "level_001"
+    },
+    "player_spawn": { "x": 60, "y": 728 },
+    "physics": {
+      "gravity": 1600,
+      "jump_force": -720,
+      "move_speed": 320,
+      "max_fall_speed": 900,
+      "friction": 800,
+      "coyote_time_ms": 80,
+      "jump_buffer_ms": 100
+    },
+    "mechanics": {
+      "double_jump": true,
+      "gravity_scale": 1.0,
+      "player_action": "none",
+      "weather": "none"
+    }
+  }
+}
