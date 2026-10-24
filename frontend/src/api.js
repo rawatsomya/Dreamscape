@@ -2,7 +2,7 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 
 export async function createStory(prompt) {
-  const response = await fetch(`${BACKEND_URL}/create-story`, {
+  const response = await fetch(`${BACKEND_URL}/api/create-story`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
