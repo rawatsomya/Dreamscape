@@ -1,68 +1,92 @@
 #!/usr/bin/env python3
+"""
+Clean sprites with rembg + alpha crop.
+Repo: https://github.com/danielgatis/rembg
+
+Usage:
+  python scripts/clean_sprites.py <input_dir> [output_dir]
+  python scripts/clean_sprites.py <input_file>
+  python scripts/clean_sprites.py
+  defaults: ./frontend/public/mock/sprites -> ./sessions/demo/clean
+"""
 import sys
 from pathlib import Path
-from PIL import Image
-from rembg import remove
+
+try:
+    from rembg import remove
+    from PIL import Image
+except ImportError:
+    print('Install: pip install "rembg[cpu]" pillow')
+    sys.exit(1)
+
+ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_IN = ROOT / "frontend" / "public" / "mock" / "sprites"
+DEFAULT_OUT = ROOT / "sessions" / "demo" / "clean"
 
 
-def alpha_crop(img: Image.Image, threshold: int = 10) -> Image.Image:
-    """Crop image to non-transparent bounding box with a minimum alpha threshold."""
-    if img.mode != "RGBA":
-        img = img.convert("RGBA")
+def clean_and_crop(
+    img_path: Path,
+    out_path: Path,
+    alpha_threshold: int = 10,
+    skip_background: bool = True,
+) -> bool:
+    try:
+        img = Image.open(img_path).convert("RGBA")
+    except Exception as e:
+        print(f"  SKIP {img_path.name}: {e}")
+        return False
 
-    # Get alpha band
-    alpha = img.split()[3]
-    # Point transform: 255 if above threshold, else 0
-    mask = alpha.point(lambda p: 255 if p > threshold else 0)
+    name = img_path.name.lower()
+    if skip_background and (
+        "background" in name or name.endswith("bg.png") or "ch00_bg" in name or name.startswith("bg")
+    ):
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        img.save(out_path)
+        print(f"  COPIED (no rembg): {img_path.name}")
+        return True
+
+    cleaned = remove(img)
+    mask = cleaned.getchannel("A").point(lambda a: 255 if a > alpha_threshold else 0)
     bbox = mask.getbbox()
     if bbox:
-        return img.crop(bbox)
-    return img
+        cleaned = cleaned.crop(bbox)
 
-
-def clean_file(path_in: Path, path_out: Path):
-    """Run rembg remove() and alpha-threshold crop, saving as transparent PNG."""
-    # Skip backgrounds
-    name_lower = path_in.name.lower()
-    if "background" in name_lower or "bg" in name_lower:
-        print(f"Skipping background file: {path_in.name}")
-        return
-
-    print(f"Cleaning: {path_in} -> {path_out}")
-    path_out.parent.mkdir(parents=True, exist_ok=True)
-
-    img = Image.open(path_in).convert("RGBA")
-    # rembg remove background
-    no_bg = remove(img)
-    # alpha crop to tightly frame the sprite
-    cropped = alpha_crop(no_bg)
-    cropped.save(path_out, format="PNG")
-    print(f"Saved clean sprite: {path_out} (size: {cropped.size})")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    cleaned.save(out_path)
+    print(f"  CLEANED: {img_path.name} -> {out_path} size={cleaned.size}")
+    return True
 
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python clean_sprites.py <input_folder_or_file> <output_folder_or_file>")
+    in_arg = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_IN
+    out_arg = Path(sys.argv[2]) if len(sys.argv) > 2 else DEFAULT_OUT
+
+    if not in_arg.exists():
+        print(f"Input missing: {in_arg}")
+        print("Put hero.png enemy.png platform.png npc.png there (white bg).")
         sys.exit(1)
 
-    src = Path(sys.argv[1])
-    dest = Path(sys.argv[2])
+    if in_arg.is_file():
+        out_path = out_arg / in_arg.name if out_arg.suffix == "" else out_arg
+        if out_path.is_dir() or out_arg.suffix == "":
+            out_path = Path(out_arg) / in_arg.name
+        clean_and_crop(in_arg, out_path)
+        return
 
-    if src.is_file():
-        if dest.is_dir() or not dest.suffix:
-            out_file = dest / src.name
-        else:
-            out_file = dest
-        clean_file(src, out_file)
-    elif src.is_dir():
-        dest.mkdir(parents=True, exist_ok=True)
-        image_extensions = {".png", ".jpg", ".jpeg", ".webp"}
-        for item in src.iterdir():
-            if item.is_file() and item.suffix.lower() in image_extensions:
-                clean_file(item, dest / f"{item.stem}.png")
-    else:
-        print(f"Source not found: {src}")
+    out_dir = out_arg
+    out_dir.mkdir(parents=True, exist_ok=True)
+    exts = {".png", ".jpg", ".jpeg", ".webp"}
+    files = [f for f in in_arg.iterdir() if f.is_file() and f.suffix.lower() in exts]
+    if not files:
+        print(f"No images in {in_arg}")
         sys.exit(1)
+
+    print(f"Cleaning {len(files)} image(s): {in_arg} -> {out_dir}")
+    ok = 0
+    for f in sorted(files):
+        if clean_and_crop(f, out_dir / f.with_suffix(".png").name):
+            ok += 1
+    print(f"Done. {ok}/{len(files)}")
 
 
 if __name__ == "__main__":

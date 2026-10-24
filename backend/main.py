@@ -2,11 +2,20 @@ import asyncio
 import json
 import os
 import re
+import sys
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+from clean_sprites import clean_and_crop  # noqa: E402
+
+RAW_DIR = ROOT / "frontend" / "public" / "mock" / "sprites"
+CLEAN_DIR = ROOT / "sessions" / "demo" / "clean"
 
 load_dotenv()
 
@@ -142,3 +151,20 @@ async def create_story(body: CreateStoryBody):
     # Simulated ~1s delay in mock mode, no Gemini API key required
     await asyncio.sleep(1.0)
     return SUGAR_RUSH_MOCK
+
+
+@app.post("/api/clean-sprites")
+def clean_sprites():
+    if not RAW_DIR.exists():
+        raise HTTPException(404, detail=f"Missing {RAW_DIR}")
+
+    CLEAN_DIR.mkdir(parents=True, exist_ok=True)
+    exts = {".png", ".jpg", ".jpeg", ".webp"}
+    files = [f for f in RAW_DIR.iterdir() if f.is_file() and f.suffix.lower() in exts]
+    results = []
+    for f in sorted(files):
+        out = CLEAN_DIR / f.with_suffix(".png").name
+        ok = clean_and_crop(f, out)
+        results.append({"file": f.name, "ok": ok, "out": str(out) if ok else None})
+
+    return {"cleaned": results, "out_dir": str(CLEAN_DIR)}
