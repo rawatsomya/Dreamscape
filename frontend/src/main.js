@@ -67,6 +67,10 @@ async function onGo() {
       out.style.display = 'block';
       out.textContent = JSON.stringify(data, null, 2);
     }
+    const previewContainer = document.getElementById('mock-assets-preview');
+    if (previewContainer) {
+      previewContainer.style.display = 'flex';
+    }
     if (status) status.textContent = `OK — ${data.theme?.title || 'world'} ready (Mock)`;
     console.log('Dreamscape JSON (Mock):', data);
   } catch (err) {

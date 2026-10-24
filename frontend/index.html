@@ -80,7 +80,15 @@
     <button id="start-btn">GO</button>
     <div id="status" style="color: #bbb; font: 13px monospace; margin-left: 8px;"></div>
   </div>
-  <pre id="json-out" style="position: absolute; bottom: 20px; left: 20px; right: 20px; max-height: 200px; overflow: auto; background: rgba(0,0,0,0.8); color: #00ffcc; font: 12px monospace; padding: 12px; border-radius: 6px; border: 1px solid #333; z-index: 10; pointer-events: auto; display: none;"></pre>
+  <pre id="json-out" style="position: absolute; bottom: 130px; left: 20px; right: 20px; max-height: 180px; overflow: auto; background: rgba(0,0,0,0.85); color: #00ffcc; font: 12px monospace; padding: 12px; border-radius: 6px; border: 1px solid #333; z-index: 10; pointer-events: auto; display: none;"></pre>
+  <div id="mock-assets-preview" style="position: absolute; bottom: 12px; left: 20px; right: 20px; display: none; align-items: center; justify-content: center; gap: 14px; background: rgba(16, 18, 27, 0.9); border: 1px solid #272d3d; padding: 10px; border-radius: 8px; z-index: 10;">
+    <div style="font: 12px monospace; color: #a5b4fc; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px;">Mock Assets:</div>
+    <div style="text-align: center;"><img id="preview-hero" src="/mock/sprites/hero.png" style="height: 52px; image-rendering: pixelated; border: 1px solid #444; border-radius: 4px; background: #222;" /><div style="font: 10px monospace; color: #aaa;">Hero</div></div>
+    <div style="text-align: center;"><img id="preview-enemy" src="/mock/sprites/enemy.png" style="height: 52px; image-rendering: pixelated; border: 1px solid #444; border-radius: 4px; background: #222;" /><div style="font: 10px monospace; color: #aaa;">Enemy</div></div>
+    <div style="text-align: center;"><img id="preview-platform" src="/mock/sprites/platform.png" style="height: 52px; image-rendering: pixelated; border: 1px solid #444; border-radius: 4px; background: #222;" /><div style="font: 10px monospace; color: #aaa;">Platform</div></div>
+    <div style="text-align: center;"><img id="preview-npc" src="/mock/sprites/npc.png" style="height: 52px; image-rendering: pixelated; border: 1px solid #444; border-radius: 4px; background: #222;" /><div style="font: 10px monospace; color: #aaa;">NPC</div></div>
+    <div style="text-align: center;"><img id="preview-bg" src="/mock/backgrounds/ch00_bg.png" style="height: 52px; border: 1px solid #444; border-radius: 4px; background: #222;" /><div style="font: 10px monospace; color: #aaa;">Background</div></div>
+  </div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
